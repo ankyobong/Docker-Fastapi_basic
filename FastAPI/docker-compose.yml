@@ -1,0 +1,37 @@
+version: '3'
+services:
+  influxdb:
+    image: dcim-tsdb:latest
+    restart: always
+    container_name: tsdb001
+    volumes:
+      - ./dhv/tsdb:/var/lib/influxdb
+    expose:
+      - 8086  # api
+    ports:
+      - "18086:8086"
+    command:
+      - influxd
+    logging:
+      driver: local
+      options:
+        max-size: 5m
+    networks:
+      - dcim
+  backend:
+    build: ./backend
+    # 연결할 외부 디렉토리 : 컨테이너 내 디렉토리
+    volumes:
+      - ./backend:/usr/src/app
+    ports:
+      - "5020:5000"
+    # 환경변수 설정
+    environment: 
+      - DBHOST=database
+  frontend:
+    build: ./frontend
+    # 연결할 외부 디렉토리 : 컨테이너 내 디렉토리
+    volumes:
+      - ./frontend:/home/node/app
+    ports:
+      - "8080:8080"

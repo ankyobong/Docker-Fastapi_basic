@@ -1,0 +1,4 @@
+uvicorn == 0.18.3
+fastapi == 0.79.0
+easysnmp == 0.2.5
+pyyaml
